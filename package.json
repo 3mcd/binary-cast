@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Broadcast PCM data to clients via express.",
   "scripts": {
-    "build": "browserify src/binary-cast-player.js --s BinaryCastPlayer > client/binary-cast-player.js; browserify src/binary-cast-recorder.js --s BinaryCastRecorder > client/binary-cast-recorder.js && npm run derequire",
+    "build": "browserify -t [ babelify --presets [ es2015 stage-0 ] ] src/binary-cast-player.js --s BinaryCastPlayer > client/binary-cast-player.js; browserify -t [ babelify --presets [ es2015 stage-0 ] ] src/binary-cast-recorder.js --s BinaryCastRecorder > client/binary-cast-recorder.js && npm run derequire",
     "derequire": "derequire client/binary-cast-player.js > client/player.js && derequire client/binary-cast-recorder.js > client/recorder.js"
   },
   "main": "index.js",
@@ -17,6 +17,9 @@
   },
   "author": "ericmcdaniel",
   "devDependencies": {
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "derequire": "^2.0.3"
   }
