@@ -1,0 +1,58 @@
+doctype
+html
+    head
+        title= "Stream to Wav"
+    body
+        button#start Start Recording
+        button#stop Stop Recording
+        script(src="binary-cast-recorder.js")
+        script.
+            var deviceSelect = document.createElement('select')
+
+            document.body.appendChild(deviceSelect)
+
+            if (!navigator.getUserMedia) {
+                navigator.getUserMedia =
+                    navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia
+            }
+
+            function success (mediaStream) {
+                var createBroadcast = BinaryCastRecorder.createBroadcast('http://localhost:3700', 'test', mediaStream);
+
+                createBroadcast.then(function (recorder) {
+                    document.querySelector('#start').addEventListener('click', recorder.start);
+                    document.querySelector('#stop').addEventListener('click', recorder.stop);
+                });
+            }
+            
+            navigator.mediaDevices.enumerateDevices().then(function (devices) {
+                var option
+
+                for (var i = 0; i < devices.length; i++) {
+                    if (devices[i].kind === 'audioinput') {
+                        option = document.createElement('option')
+                        option.textContent = devices[i].label
+                        option.value = devices[i].deviceId
+                        deviceSelect.appendChild(option)
+                    }
+                }
+
+                document.body.appendChild(deviceSelect)
+            })
+
+            if (navigator.getUserMedia) {
+                deviceSelect.addEventListener('change', function (e) {
+                    navigator.getUserMedia({
+                        audio: {
+                            optional: [ { sourceId: deviceSelect.value } ]
+                        }
+                    }, success, function (e) {
+                        window.alert('Error capturing audio.')
+                    })
+                })
+            } else { 
+                window.alert('getUserMedia not supported in this browser.')
+            }
