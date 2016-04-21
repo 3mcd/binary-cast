@@ -1,5 +1,6 @@
 'use strict'
 
+const os = require('os')
 const BinaryServer = require('binaryjs').BinaryServer
 
 module.exports = create
@@ -7,7 +8,7 @@ module.exports = create
 function create (app, ports) {
     ports = ports || 9000
 
-    const HOSTNAME = '0.0.0.0'
+    const HOSTNAME = os.hostname()
     const broadcasts = {}
 
     app.post('/broadcasts', function (req, res) {
