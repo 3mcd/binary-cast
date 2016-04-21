@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "Broadcast PCM data to clients via express.",
   "scripts": {
-    "build": "browserify src/binary-cast-player.js --s BinaryCastPlayer > client/binary-cast-player.js; browserify src/binary-cast-recorder.js --s BinaryCastRecorder > client/binary-cast-recorder.js"
+    "build": "browserify src/binary-cast-player.js --s BinaryCastPlayer > client/binary-cast-player.js; browserify src/binary-cast-recorder.js --s BinaryCastRecorder > client/binary-cast-recorder.js && npm run derequire",
+    "derequire": "derequire client/binary-cast-player.js > client/player.js && derequire client/binary-cast-recorder.js > client/recorder.js"
   },
   "main": "index.js",
   "dependencies": {
@@ -11,11 +12,12 @@
     "body-parser": "^1.15.0",
     "express": "latest",
     "jade": "latest",
-    "wav": "latest"
+    "wav": "latest",
+    "binaryjs-client": "^1.0.0"
   },
   "author": "ericmcdaniel",
   "devDependencies": {
-    "binaryjs-client": "^1.0.0",
-    "browserify": "^13.0.0"
+    "browserify": "^13.0.0",
+    "derequire": "^2.0.3"
   }
 }
