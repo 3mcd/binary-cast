@@ -57,15 +57,18 @@ function findBroadcast (server, broadcast) {
 }
 
 function createAudioStreamClient (url) {
+    var stream
+
     const client = new BinaryClient(url)
     const context = new (window.AudioContext || window.webkitAudioContext)()
     const cache = audioStreamCache(context)
 
     var init = true
 
-    function onStream (stream) {
-        stream.on('data', onData)
-        stream.on('end', onEnd)
+    function onStream (s) {
+        stream = s
+        s.on('data', onData)
+        s.on('end', onEnd)
     }
 
     function onEnd () {
@@ -90,6 +93,11 @@ function createAudioStreamClient (url) {
 
     function destroy () {
         client.removeListener('stream', onStream)
+        stream.removeListener('data', onData)
+        stream.removeListener('end', onEnd)
+        client.close()
+        stream.end()
+        stream.destroy()
     }
 
     client.on('stream', onStream)
